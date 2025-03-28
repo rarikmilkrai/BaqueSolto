@@ -1,3 +1,18 @@
+![GIRUS](girus-logo.png)
+
+# GIRUS: Plataforma de Laboratórios Interativos
+
+Versão 0.1.0 Codename: "Maracatu" - Março de 2025
+
+## Visão Geral
+
+GIRUS é uma plataforma open-source de laboratórios interativos que permite a criação, gerenciamento e execução de ambientes de aprendizado prático para tecnologias como Linux, Docker, Kubernetes, Terraform e outras ferramentas essenciais para profissionais de DevOps, SRE, Dev e Platform Engineering.
+
+Desenvolvida pela LINUXtips, a plataforma GIRUS se diferencia por ser executada localmente na máquina do usuário, eliminando a necessidade de infraestrutura na nuvem ou configurações complexas. Através de um CLI intuitivo, os usuários podem criar rapidamente ambientes isolados e seguros onde podem praticar e aperfeiçoar suas habilidades técnicas.
+
+
+##laboratorio baquesolto
+
 # BaqueSolto
 # 🐚 Curso de Lógica de Programação com Shell Script
 
