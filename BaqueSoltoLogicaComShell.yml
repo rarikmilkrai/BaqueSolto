@@ -1,13 +1,13 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: lab-shell-logic-basic
-  namespace: girus
+  name: lab-baquesolto-girus
+  namespace: baquesolto
   labels:
-    app: girus-lab-template
+    app: baquesolto
 data:
   lab.yaml: |
-    name: shell-logic-basic
+    name: baquesolto-logica-com-shell
     title: "Lógica de Programação com Shell Script (Básico)"
     description: "Aprenda conceitos fundamentais de programação como se fosse um jogo!"
     duration: 90m
