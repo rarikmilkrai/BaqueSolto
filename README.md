@@ -28,4 +28,4 @@ Ensinar os fundamentos da programação através de:
 ## 📚 Conteúdo
 A ALTERAR
 
-## ELABORADO POR: Rarikmilkrai Souza
+## Contribuido por: Rarikmilkrai Souza
