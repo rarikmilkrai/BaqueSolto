@@ -20,9 +20,9 @@ data:
           - "Peça para o computador mostrar o que tem na caixa: echo 'Olá, $nome!'"
           - "Crie duas caixas com números (num1=5, num2=3) e mostre a soma: echo $((num1 + num2))"
         validation:
-          - command: "bash /path/to/script.sh | grep -q 'Olá, .*!'"
+          - command: "bash script.sh | grep -q 'Olá, .*!'"
             errorMessage: "Opa! Você esqueceu de colocar seu nome na caixa ou de chamar ela!"
-          - command: "bash /path/to/script.sh | grep -q '8'"
+          - command: "bash script.sh | grep -q '8'"
             errorMessage: "A soma de 5+3 deveria ser 8. Verifique suas caixas numéricas!"
 
       # Exemplo Extra 1: Variáveis com Frutas
@@ -33,7 +33,7 @@ data:
           - "Crie 'fruta2' com outra fruta que você goste"
           - "Mostre: 'Minhas frutas preferidas são: [fruta1] e [fruta2]'"
         validation:
-          - command: "bash /path/to/script.sh | grep -q 'Minhas frutas preferidas são: .* e .*'"
+          - command: "bash script.sh | grep -q 'Minhas frutas preferidas são: .* e .*'"
             errorMessage: "Cadê suas frutas preferidas? Não encontrei elas na lista!"
 
       # --- OPERAÇÕES MATEMÁTICAS --- #
@@ -44,9 +44,9 @@ data:
           - "Mostre a soma, subtração e multiplicação deles"
           - "Dica: Use $((numero1 + numero2)) para calcular"
         validation:
-          - command: "echo -e '4\\n2' | bash /path/to/script.sh | grep -q '6'"
+          - command: "echo -e '4\\n2' | bash script.sh | grep -q '6'"
             errorMessage: "4+2 deveria ser 6. Sua calculadora está com pilha fraca!"
-          - command: "echo -e '4\\n2' | bash /path/to/script.sh | grep -q '2'"
+          - command: "echo -e '4\\n2' | bash script.sh | grep -q '2'"
             errorMessage: "4-2 deveria ser 2. Confira a subtração!"
 
       # Exemplo Extra 2: Idade em Dias
@@ -57,7 +57,7 @@ data:
           - "Calcule: dias = anos * 365"
           - "Mostre: 'Você já viveu aproximadamente [dias] dias!'"
         validation:
-          - command: "echo '10' | bash /path/to/script.sh | grep -q '3650'"
+          - command: "echo '10' | bash script.sh | grep -q '3650'"
             errorMessage: "10 anos deveriam ser 3650 dias. Não esqueça de multiplicar!"
 
       # --- CONDICIONAIS --- #
@@ -68,23 +68,31 @@ data:
           - "Se tiver >= 10 reais: 'Você pode comprar um lanche completo!'"
           - "Se tiver < 10: 'Você pode comprar um refrigerante'"
         validation:
-          - command: "echo '15' | bash /path/to/script.sh | grep -q 'lanche completo'"
+          - command: "echo '15' | bash script.sh | grep -q 'lanche completo'"
             errorMessage: "Com 15 reais você deveria poder comprar um lanche!"
-          - command: "echo '5' | bash /path/to/script.sh | grep -q 'refrigerante'"
+          - command: "echo '5' | bash script.sh | grep -q 'refrigerante'"
             errorMessage: "Com 5 reais o refrigerante deveria aparecer!"
 
       # Exemplo Extra 3: Adivinhe o Número
-      - name: "Condicionais - Jogo de Adivinhação"
-        description: "Vamos brincar de adivinhar um número secreto (7)!"
+      - name: "Condicionais - Jogo de Adivinhação Melhorado"
+        description: "Vamos turbinar nosso jogo de adivinhar um número secreto (7)! Agora com dicas!"
         steps:
           - "Pergunte: 'Qual número estou pensando (1-10)?'"
-          - "Se acertar: 'Parabéns! Você acertou!'"
-          - "Se errar: 'Ops! Era o número 7'"
+          - "Se acertar (número == 7): 'Parabéns! Você acertou!'"
+          - "Se errar e o número for MENOR que 7: 'Ops! O número que pensei é MAIOR que o seu chute.'"
+          - "Se errar e o número for MAIOR que 7: 'Ops! O número que pensei é MENOR que o seu chute.'"
+          - "Dica: você vai precisar usar 'if', 'elif' (else if) e 'else'."
         validation:
-          - command: "echo '7' | bash /path/to/script.sh | grep -q 'Parabéns'"
-            errorMessage: "Quando digitar 7 deveria dar parabéns!"
-          - command: "echo '2' | bash /path/to/script.sh | grep -q 'Ops'"
-            errorMessage: "Se errar o número, deveria mostrar a mensagem do número secreto!"
+          - command: "echo '7' | bash script.sh | grep -q 'Parabéns! Você acertou!'"
+            errorMessage: "Quando digitar 7 deveria dar parabéns! Verifique sua condição de acerto."
+          - command: "echo '2' | bash script.sh | grep -q 'MAIOR que o seu chute'"
+            errorMessage: "Se o chute for 2 (menor que 7), deveria dizer que o número secreto é MAIOR."
+          - command: "echo '9' | bash script.sh | grep -q 'MENOR que o seu chute'"
+            errorMessage: "Se o chute for 9 (maior que 7), deveria dizer que o número secreto é MENOR."
+          - command: "echo '2' | bash script.sh | grep -v -q 'Parabéns! Você acertou!'"
+            errorMessage: "Se o chute for 2, não deveria parabenizar. Apenas a dica de MAIOR."
+          - command: "echo '9' | bash script.sh | grep -v -q 'Parabéns! Você acertou!'"
+            errorMessage: "Se o chute for 9, não deveria parabenizar. Apenas a dica de MENOR."
 
       # --- LOOPS --- #
       - name: "Loops - Contagem Regressiva"
@@ -94,7 +102,7 @@ data:
           - "Depois mostre 'FOGO!'"
           - "Dica: for i in {5..1}; do echo $i; done"
         validation:
-          - command: "bash /path/to/script.sh | grep -q '5 4 3 2 1 FOGO'"
+          - command: "bash script.sh | grep -q '5 4 3 2 1 FOGO'"
             errorMessage: "A contagem regressiva falhou! O foguete não decolou!"
 
       # Exemplo Extra 4: Loops com Animais
@@ -105,10 +113,131 @@ data:
           - "Use 'for' para mostrar cada animal e seu som:"
           - "Exemplo: 'A vaca faz muuu!'"
         validation:
-          - command: "bash /path/to/script.sh | grep -q 'A vaca faz muuu'"
+          - command: "bash script.sh | grep -q 'A vaca faz muuu'"
             errorMessage: "A vaca não mugiu! Verifique seu loop dos animais!"
-          - command: "bash /path/to/script.sh | grep -c 'faz' | grep -q '4'"
+          - command: "bash script.sh | grep -c 'faz' | grep -q '4'"
             errorMessage: "Deveria mostrar 4 animais diferentes!"
+
+      # --- ARRAYS --- #
+      - name: "Arrays - Organizando Coleções"
+        description: "Arrays são como listas com vários compartimentos numerados. Vamos aprender a usá-los para guardar várias informações de uma vez!"
+        steps:
+          - "Crie um array chamado 'frutas' com os itens: 'Maçã', 'Banana', 'Laranja'."
+          - "Mostre o segundo item da lista (Banana): echo ${frutas[1]}"
+          - "Adicione 'Uva' à sua lista de frutas: frutas+=('Uva')"
+          - "Mostre todos os itens da lista, um por linha: printf '%s\n' "${frutas[@]}""
+          - "Mostre quantos itens tem na lista: echo ${#frutas[@]}"
+        validation:
+          - command: "bash script.sh | grep -q 'Banana'"
+            errorMessage: "Parece que você não mostrou a Banana corretamente. Lembre-se que o primeiro item é o índice 0!"
+          - command: "bash script.sh | grep -Fxq $'Maçã\nBanana\nLaranja\nUva'"
+            errorMessage: "A lista final de frutas com 'Uva' não apareceu como esperado, uma fruta por linha. Verifique a adição e o comando printf!"
+          - command: "bash script.sh | tail -n 1 | grep -q '4'"
+            errorMessage: "A contagem de frutas está incorreta. Deveriam ser 4 frutas no final."
+
+      # --- ENTRADA DE USUÁRIO AVANÇADA --- #
+      - name: "Entrada de Usuário - Personalizando Saudações"
+        description: "Vamos deixar nosso script mais interativo e pessoal, pedindo informações ao usuário e usando-as para criar mensagens customizadas."
+        steps:
+          - "Pergunte o nome do usuário e guarde na variável 'nome_usuario': read -p 'Qual é o seu nome? ' nome_usuario"
+          - "Pergunte a cidade do usuário e guarde na variável 'cidade_usuario': read -p 'De qual cidade você fala? ' cidade_usuario"
+          - "Exiba a mensagem: 'Olá [nome_usuario] de [cidade_usuario], seja muito bem-vindo(a) ao mundo do Shell Script!'"
+        validation:
+          - command: "echo -e 'Alex\nCyberTerra' | bash script.sh | grep -q 'Olá Alex de CyberTerra, seja muito bem-vindo(a) ao mundo do Shell Script!'"
+            errorMessage: "A saudação final não está como esperado. Verifique as variáveis e a frase completa. Exemplo: Olá Alex de CyberTerra, seja muito bem-vindo(a) ao mundo do Shell Script!"
+          - command: "grep -A 2 'read -p' script.sh | grep -q 'nome_usuario' && grep -A 2 'read -p' script.sh | grep -q 'cidade_usuario'"
+            errorMessage: "Parece que você não usou 'read -p' para perguntar o nome e a cidade, ou não guardou nas variáveis 'nome_usuario' e 'cidade_usuario'."
+
+      # --- FUNÇÕES --- #
+      - name: "Funções - Criando Blocos de Código Reutilizáveis"
+        description: "Funções nos ajudam a organizar o código em pedaços menores que podem ser chamados várias vezes. É como criar seus próprios comandos!"
+        steps:
+          - "Defina uma função chamada 'saudacao' que mostre a mensagem: 'Bem-vindo ao mundo das funções!'"
+          - "Chame a função 'saudacao' para ver a mensagem."
+          - "Agora, crie uma função chamada 'mensagem_personalizada' que recebe um nome como parâmetro (ex: $1)."
+          - "Dentro de 'mensagem_personalizada', mostre: 'Olá [nome_passado_como_parametro], tudo bem?'"
+          - "Chame 'mensagem_personalizada' passando seu nome para ela: mensagem_personalizada 'SeuNomeAqui'"
+        validation:
+          - command: "bash script.sh | grep -q 'Bem-vindo ao mundo das funções!'"
+            errorMessage: "A função 'saudacao' não foi chamada ou não imprimiu a mensagem correta."
+          - command: "bash script.sh | grep -q 'Olá .*SeuNomeAqui.*, tudo bem?'"
+            errorMessage: "A função 'mensagem_personalizada' não funcionou como esperado com seu nome. Verifique a passagem de parâmetro e a mensagem."
+          - command: "grep -q 'saudacao()' script.sh && grep -q 'mensagem_personalizada()' script.sh"
+            errorMessage: "Certifique-se de que as funções 'saudacao' e 'mensagem_personalizada' estão definidas corretamente (ex: nome_funcao() { ... })."
+
+      # --- EXPLORADOR DE ARQUIVOS --- #
+      - name: "Explorador de Arquivos - Verificando Coisas"
+        description: "Vamos aprender como nosso script pode verificar se arquivos ou pastas existem antes de tentar usá-los. Os 'echo' deste exercício devem ser salvos em 'script_output.txt'."
+        steps:
+          - "IMPORTANTE: Neste exercício, todos os seus comandos 'echo' devem gravar a saída no arquivo 'script_output.txt'. Use '>' para o primeiro echo e '>>' para os seguintes. Ex: echo 'Mensagem 1' > script_output.txt; echo 'Mensagem 2' >> script_output.txt"
+          - "Use o comando 'touch meu_arquivo.txt' no seu script para criar um arquivo vazio."
+          - "Depois, verifique se 'meu_arquivo.txt' existe E é um arquivo comum. Se sim, escreva em 'script_output.txt': 'meu_arquivo.txt existe e é um arquivo.'"
+          - "Use o comando 'mkdir minha_pasta' no seu script para criar um diretório."
+          - "Depois, verifique se 'minha_pasta' existe E é um diretório. Se sim, escreva em 'script_output.txt': 'minha_pasta existe e é um diretório.'"
+          - "Agora, verifique se um arquivo chamado 'arquivo_fantasma.txt' NÃO existe. Se ele não existir, escreva em 'script_output.txt': 'arquivo_fantasma.txt não encontrado.'"
+        validation:
+          - command: "bash script.sh && cat script_output.txt | grep -q 'meu_arquivo.txt existe e é um arquivo.' && [ -f meu_arquivo.txt ] && rm -f meu_arquivo.txt script_output.txt"
+            errorMessage: "A verificação de 'meu_arquivo.txt' falhou. Ele foi criado? A mensagem está correta em 'script_output.txt'? Lembre-se de apagar 'meu_arquivo.txt' e 'script_output.txt' no final do script para testes."
+          - command: "bash script.sh && cat script_output.txt | grep -q 'minha_pasta existe e é um diretório.' && [ -d minha_pasta ] && rm -rf minha_pasta script_output.txt"
+            errorMessage: "A verificação de 'minha_pasta' falhou. Ela foi criada? A mensagem está correta em 'script_output.txt'? Lembre-se de apagar 'minha_pasta' e 'script_output.txt' no final do script."
+          - command: "bash script.sh && cat script_output.txt | grep -q 'arquivo_fantasma.txt não encontrado.' && [ ! -f arquivo_fantasma.txt ] && rm -f script_output.txt"
+            errorMessage: "A verificação para 'arquivo_fantasma.txt' não funcionou. A mensagem está correta em 'script_output.txt'?"
+          # This task requires the script to manage its created files for idempotency, or the test runner to clean up.
+          # The commands now include cleanup for the next validation run.
+
+      # --- MANIPULAÇÃO DE STRINGS BÁSICA --- #
+      - name: "Brincando com Palavras - Manipulação de Strings Básica"
+        description: "Strings são sequências de caracteres. Vamos ver como obter informações sobre elas, como seu tamanho, e como verificar se contêm outras palavras."
+        steps:
+          - "Crie uma variável chamada 'minha_string' com o valor 'Shell Script é divertido!'."
+          - "Mostre o tamanho (número de caracteres) da 'minha_string'. Dica: use ${#variavel}."
+          - "Verifique se a palavra 'divertido' está contida em 'minha_string'. Dica: if [[ \"${minha_string}\" == *divertido* ]]; then ..."
+          - "Se estiver, mostre a mensagem: 'A palavra divertido foi encontrada!'."
+          - "Verifique se a palavra 'chato' está contida em 'minha_string'."
+          - "Se NÃO estiver, mostre a mensagem: 'A palavra chato não foi encontrada!'. Dica: if [[ \"${minha_string}\" != *chato* ]]; then ..."
+        validation:
+          - command: "bash script.sh | grep -Fxq '25'"
+            errorMessage: "O tamanho da string 'Shell Script é divertido!' não foi mostrado corretamente na saída. Deveria ser exatamente '25'."
+          - command: "bash script.sh | grep -q 'A palavra divertido foi encontrada!'"
+            errorMessage: "A mensagem sobre encontrar 'divertido' não apareceu. Verifique sua condição if e o teste de substring."
+          - command: "bash script.sh | grep -q 'A palavra chato não foi encontrada!'"
+            errorMessage: "A mensagem sobre não encontrar 'chato' não apareceu. Verifique sua condição if para testar a ausência da substring."
+          - command: "bash script.sh | grep -v 'A palavra divertido não foi encontrada!'"
+            errorMessage: "Sua lógica pode estar incorreta para a palavra 'divertido'. Ela deveria ser encontrada."
+          - command: "bash script.sh | grep -v 'A palavra chato foi encontrada!'"
+            errorMessage: "Sua lógica parece estar indicando que 'chato' foi encontrado, o que não deveria acontecer."
+
+      # --- LOOP WHILE --- #
+      - name: "Loops Infinitos (Mas Nem Tanto) - Usando o While"
+        description: "O loop 'while' continua executando enquanto uma condição for verdadeira. É ótimo para quando não sabemos quantas vezes precisamos repetir algo!"
+        steps:
+          - "Crie uma variável 'contador' e inicialize com 1."
+          - "Use um loop 'while' que continue enquanto 'contador' for menor ou igual a 3 ( dica: while [ $contador -le 3 ]; do ... done )."
+          - "Dentro do loop, mostre o valor atual de 'contador'."
+          - "IMPORTANTE: Dentro do loop, não se esqueça de incrementar o 'contador' (ex: contador=$((contador + 1)) ) para evitar um loop infinito!"
+        validation:
+          - command: "bash script.sh | xargs | grep -q '^1 2 3$'"
+            errorMessage: "A saída esperada era '1 2 3' (os números podem estar separados por espaços ou novas linhas, mas devem ser esses e nessa ordem). Verifique sua condição de loop, o echo e o incremento do contador."
+          - command: "grep 'while \[ \$contador -le 3 \]' script.sh | grep -q 'contador=\$((contador + 1))'"
+            errorMessage: "Parece que a estrutura do loop 'while' (while [ \$contador -le 3 ]) ou o incremento do contador (contador=\$((contador + 1))) não estão corretos ou não estão na mesma linha/bloco do loop 'while' no script."
+
+      # --- ARGUMENTOS DE LINHA DE COMANDO --- #
+      - name: "Argumentos Secretos - Scripts que Recebem Ordens"
+        description: "Seus scripts podem receber informações quando são chamados! Estes são os argumentos de linha de comando, e podemos usá-los para tornar os scripts mais flexíveis."
+        steps:
+          - "Seu script deve acessar o primeiro argumento (nome) usando '$1' e o segundo (cidade) usando '$2'."
+          - "Mostre a mensagem: 'O usuário $1 é de $2.'"
+          - "Mostre também o número total de argumentos que foram passados para o script na linha seguinte. Dica: use $#."
+          - "BÔNUS: Antes de tudo, verifique se o número de argumentos passados ( $# ) é diferente de 2. Se for, mostre a mensagem de erro 'Uso: $0 <nome> <cidade>' (onde $0 é o nome do script) e saia do script com status 1 (comando: exit 1)."
+        validation:
+          - command: "bash script.sh Maria Sampa | grep -Fxq $'O usuário Maria é de Sampa.\n2'"
+            errorMessage: "Com os argumentos 'Maria' e 'Sampa', a saída esperada era 'O usuário Maria é de Sampa.' seguido por '2' na linha seguinte. Verifique o acesso aos argumentos $1, $2 e $#."
+          - command: "OUTPUT=$(bash script.sh Carlos 2>&1); EXIT_CODE=$?; echo "$OUTPUT" | grep -q 'Uso: script.sh <nome> <cidade>' && [ $EXIT_CODE -eq 1 ]"
+            errorMessage: "Seu script não lidou corretamente com UM argumento. Esperava-se a mensagem 'Uso: script.sh <nome> <cidade>' (note que $0 é substituído por 'script.sh' no teste) e status de saída 1."
+          - command: "OUTPUT=$(bash script.sh Ana BH ExtraArg 2>&1); EXIT_CODE=$?; echo "$OUTPUT" | grep -q 'Uso: script.sh <nome> <cidade>' && [ $EXIT_CODE -eq 1 ]"
+            errorMessage: "Seu script não lidou corretamente com TRÊS argumentos. Esperava-se a mensagem 'Uso: script.sh <nome> <cidade>' e status de saída 1."
+          - command: "OUTPUT=$(bash script.sh 2>&1); EXIT_CODE=$?; echo "$OUTPUT" | grep -q 'Uso: script.sh <nome> <cidade>' && [ $EXIT_CODE -eq 1 ]"
+            errorMessage: "Seu script não lidou corretamente com ZERO argumentos. Esperava-se a mensagem 'Uso: script.sh <nome> <cidade>' e status de saída 1."
 
       # --- DESAFIO FINAL --- #
       - name: "Desafio - Super Herói"
@@ -119,7 +248,7 @@ data:
           - "Se < 18: 'Você é um Herói Júnior!'"
           - "Mostre tudo numa frase bonita"
         validation:
-          - command: "echo -e 'Flash\\nVelocidade\\n25' | bash /path/to/script.sh | grep -q 'Liga dos Heróis'"
+          - command: "echo -e 'Flash\\nVelocidade\\n25' | bash script.sh | grep -q 'Liga dos Heróis'"
             errorMessage: "Heróis com 25 anos deveriam entrar na Liga!"
-          - command: "echo -e 'Robin\\nArtes marciais\\n15' | bash /path/to/script.sh | grep -q 'Herói Júnior'"
+          - command: "echo -e 'Robin\\nArtes marciais\\n15' | bash script.sh | grep -q 'Herói Júnior'"
             errorMessage: "Heróis jovens deveriam ser Júnior!"
