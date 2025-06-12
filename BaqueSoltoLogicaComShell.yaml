@@ -1,0 +1,163 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: lab-baquesolto-girus
+  namespace: baquesolto
+  labels:
+    app: baquesolto
+data:
+  lab.yaml: |
+    name: baquesolto-logica-com-shell
+    title: "Lógica de Programação com Shell Script (Básico)"
+    description: "Aprenda conceitos fundamentais de programação como se fosse um jogo!"
+    duration: 90m
+    tasks:
+      # --- VARIÁVEIS E OPERAÇÕES --- #
+      - name: "Variáveis - Caixas Mágicas"
+        description: "Variáveis são como caixas onde guardamos coisas. Vamos brincar com elas!"
+        steps:
+          - "Crie uma caixa chamada 'nome' e coloque seu nome dentro: nome='Fulano'"
+          - "Peça para o computador mostrar o que tem na caixa: echo 'Olá, $nome!'"
+          - "Crie duas caixas com números (num1=5, num2=3) e mostre a soma: echo $((num1 + num2))"
+        validation:
+          - command: "bash script.sh | grep -q 'Olá, .*!'"
+            errorMessage: "Opa! Você esqueceu de colocar seu nome na caixa ou de chamar ela!"
+          - command: "bash script.sh | grep -q '8'"
+            errorMessage: "A soma de 5+3 deveria ser 8. Verifique suas caixas numéricas!"
+
+      # Exemplo Extra 1: Variáveis com Frutas
+      - name: "Variáveis - Lista de Frutas"
+        description: "Vamos fazer uma lista de compras com variáveis!"
+        steps:
+          - "Crie uma variável 'fruta1' com sua fruta preferida"
+          - "Crie 'fruta2' com outra fruta que você goste"
+          - "Mostre: 'Minhas frutas preferidas são: [fruta1] e [fruta2]'"
+        validation:
+          - command: "bash script.sh | grep -q 'Minhas frutas preferidas são: .* e .*'"
+            errorMessage: "Cadê suas frutas preferidas? Não encontrei elas na lista!"
+
+      # --- OPERAÇÕES MATEMÁTICAS --- #
+      - name: "Matemática - Calculadora Simples"
+        description: "Vamos fazer contas como uma calculadora!"
+        steps:
+          - "Peça dois números para o usuário (use 'read')"
+          - "Mostre a soma, subtração e multiplicação deles"
+          - "Dica: Use $((numero1 + numero2)) para calcular"
+        validation:
+          - command: "echo -e '4\\n2' | bash script.sh | grep -q '6'"
+            errorMessage: "4+2 deveria ser 6. Sua calculadora está com pilha fraca!"
+          - command: "echo -e '4\\n2' | bash script.sh | grep -q '2'"
+            errorMessage: "4-2 deveria ser 2. Confira a subtração!"
+
+      # Exemplo Extra 2: Idade em Dias
+      - name: "Matemática - Sua idade em dias"
+        description: "Quantos dias você já viveu? Vamos calcular!"
+        steps:
+          - "Pergunte quantos anos a pessoa tem"
+          - "Calcule: dias = anos * 365"
+          - "Mostre: 'Você já viveu aproximadamente [dias] dias!'"
+        validation:
+          - command: "echo '10' | bash script.sh | grep -q '3650'"
+            errorMessage: "10 anos deveriam ser 3650 dias. Não esqueça de multiplicar!"
+
+      # --- CONDICIONAIS --- #
+      - name: "Condicionais - Lanchonete do If-Else"
+        description: "If e Else são como escolhas num cardápio!"
+        steps:
+          - "Pergunte: 'Quantos reais você tem?' (use 'read')"
+          - "Se tiver >= 10 reais: 'Você pode comprar um lanche completo!'"
+          - "Se tiver < 10: 'Você pode comprar um refrigerante'"
+        validation:
+          - command: "echo '15' | bash script.sh | grep -q 'lanche completo'"
+            errorMessage: "Com 15 reais você deveria poder comprar um lanche!"
+          - command: "echo '5' | bash script.sh | grep -q 'refrigerante'"
+            errorMessage: "Com 5 reais o refrigerante deveria aparecer!"
+
+      # Exemplo Extra 3: Adivinhe o Número
+      - name: "Condicionais - Jogo de Adivinhação Melhorado"
+        description: "Vamos turbinar nosso jogo de adivinhar um número secreto (7)! Agora com dicas!"
+        steps:
+          - "Pergunte: 'Qual número estou pensando (1-10)?'"
+          - "Se acertar (número == 7): 'Parabéns! Você acertou!'"
+          - "Se errar e o número for MENOR que 7: 'Ops! O número que pensei é MAIOR que o seu chute.'"
+          - "Se errar e o número for MAIOR que 7: 'Ops! O número que pensei é MENOR que o seu chute.'"
+          - "Dica: você vai precisar usar 'if', 'elif' (else if) e 'else'."
+        validation:
+          - command: "echo '7' | bash script.sh | grep -q 'Parabéns! Você acertou!'"
+            errorMessage: "Quando digitar 7 deveria dar parabéns! Verifique sua condição de acerto."
+          - command: "echo '2' | bash script.sh | grep -q 'MAIOR que o seu chute'"
+            errorMessage: "Se o chute for 2 (menor que 7), deveria dizer que o número secreto é MAIOR."
+          - command: "echo '9' | bash script.sh | grep -q 'MENOR que o seu chute'"
+            errorMessage: "Se o chute for 9 (maior que 7), deveria dizer que o número secreto é MENOR."
+          - command: "echo '2' | bash script.sh | grep -v -q 'Parabéns! Você acertou!'"
+            errorMessage: "Se o chute for 2, não deveria parabenizar. Apenas a dica de MAIOR."
+          - command: "echo '9' | bash script.sh | grep -v -q 'Parabéns! Você acertou!'"
+            errorMessage: "Se o chute for 9, não deveria parabenizar. Apenas a dica de MENOR."
+
+      # --- LOOPS --- #
+      - name: "Loops - Contagem Regressiva"
+        description: "Vamos contar como um foguete decolando!"
+        steps:
+          - "Faça um loop 'for' que conta de 5 até 1"
+          - "Depois mostre 'FOGO!'"
+          - "Dica: for i in {5..1}; do echo $i; done"
+        validation:
+          - command: "bash script.sh | grep -q '5 4 3 2 1 FOGO'"
+            errorMessage: "A contagem regressiva falhou! O foguete não decolou!"
+
+      # Exemplo Extra 4: Loops com Animais
+      - name: "Loops - Fazendinha"
+        description: "Vamos imitar os bichos da fazenda!"
+        steps:
+          - "Crie uma lista: animais=('vaca' 'galinha' 'porco' 'ovelha')"
+          - "Use 'for' para mostrar cada animal e seu som:"
+          - "Exemplo: 'A vaca faz muuu!'"
+        validation:
+          - command: "bash script.sh | grep -q 'A vaca faz muuu'"
+            errorMessage: "A vaca não mugiu! Verifique seu loop dos animais!"
+          - command: "bash script.sh | grep -c 'faz' | grep -q '4'"
+            errorMessage: "Deveria mostrar 4 animais diferentes!"
+
+      # --- ARRAYS --- #
+      - name: "Arrays - Organizando Coleções"
+        description: "Arrays são como listas com vários compartimentos numerados. Vamos aprender a usá-los para guardar várias informações de uma vez!"
+        steps:
+          - "Crie um array chamado 'frutas' com os itens: 'Maçã', 'Banana', 'Laranja'."
+          - "Mostre o segundo item da lista (Banana): echo ${frutas[1]}"
+          - "Adicione 'Uva' à sua lista de frutas: frutas+=('Uva')"
+          - "Mostre todos os itens da lista, um por linha: printf '%s\n' "${frutas[@]}""
+          - "Mostre quantos itens tem na lista: echo ${#frutas[@]}"
+        validation:
+          - command: "bash script.sh | grep -q 'Banana'"
+            errorMessage: "Parece que você não mostrou a Banana corretamente. Lembre-se que o primeiro item é o índice 0!"
+          - command: "bash script.sh | grep -Fxq $'Maçã\nBanana\nLaranja\nUva'"
+            errorMessage: "A lista final de frutas com 'Uva' não apareceu como esperado, uma fruta por linha. Verifique a adição e o comando printf!"
+          - command: "bash script.sh | tail -n 1 | grep -q '4'"
+            errorMessage: "A contagem de frutas está incorreta. Deveriam ser 4 frutas no final."
+
+      # --- ENTRADA DE USUÁRIO AVANÇADA --- #
+      - name: "Entrada de Usuário - Personalizando Saudações"
+        description: "Vamos deixar nosso script mais interativo e pessoal, pedindo informações ao usuário e usando-as para criar mensagens customizadas."
+        steps:
+          - "Pergunte o nome do usuário e guarde na variável 'nome_usuario': read -p 'Qual é o seu nome? ' nome_usuario"
+          - "Pergunte a cidade do usuário e guarde na variável 'cidade_usuario': read -p 'De qual cidade você fala? ' cidade_usuario"
+          - "Exiba a mensagem: 'Olá [nome_usuario] de [cidade_usuario], seja muito bem-vindo(a) ao mundo do Shell Script!'"
+        validation:
+          - command: "echo -e 'Alex\nCyberTerra' | bash script.sh | grep -q 'Olá Alex de CyberTerra, seja muito bem-vindo(a) ao mundo do Shell Script!'"
+            errorMessage: "A saudação final não está como esperado. Verifique as variáveis e a frase completa. Exemplo: Olá Alex de CyberTerra, seja muito bem-vindo(a) ao mundo do Shell Script!"
+          - command: "grep -A 2 'read -p' script.sh | grep -q 'nome_usuario' && grep -A 2 'read -p' script.sh | grep -q 'cidade_usuario'"
+            errorMessage: "Parece que você não usou 'read -p' para perguntar o nome e a cidade, ou não guardou nas variáveis 'nome_usuario' e 'cidade_usuario'."
+
+      # --- DESAFIO FINAL --- #
+      - name: "Desafio - Super Herói"
+        description: "Vamos criar um perfil de super herói!"
+        steps:
+          - "Pergunte o nome, superpoder e idade do herói"
+          - "Se idade >= 18: 'Pode entrar na Liga dos Heróis!'"
+          - "Se < 18: 'Você é um Herói Júnior!'"
+          - "Mostre tudo numa frase bonita"
+        validation:
+          - command: "echo -e 'Flash\\nVelocidade\\n25' | bash script.sh | grep -q 'Liga dos Heróis'"
+            errorMessage: "Heróis com 25 anos deveriam entrar na Liga!"
+          - command: "echo -e 'Robin\\nArtes marciais\\n15' | bash script.sh | grep -q 'Herói Júnior'"
+            errorMessage: "Heróis jovens deveriam ser Júnior!"
